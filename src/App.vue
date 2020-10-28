@@ -6,14 +6,14 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
+        <img
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
           src="@/assets/logo.png"
           transition="scale-transition"
-          width="100"
-        />
+          width="100">
+        
       </div>
 
       <v-spacer></v-spacer>
