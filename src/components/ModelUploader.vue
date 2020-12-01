@@ -28,17 +28,16 @@ import axios from 'axios';
 //import http_common from "@/services/http_common.js"
   export default {
     name: 'ModelUploader',
-
+    
     data() {
       return {
+        name: "",
         model_data: {
           data: "",
-          config: "",
-          name: ""
-
+          config: ""
         }
       }   
-    },
+    }, 
     methods: {
 
       async submit() {
@@ -50,9 +49,10 @@ import axios from 'axios';
         formData.append(data, this.model_data[data]);
       }
       try {
-        await axios.put("http://localhost:5000/admin/model/ + data.name", formData, config);
+        await axios.put('http://localhost:5000/admin/model/'+ encodeURIComponent(this.model_data.name), formData, config);
         console.log("model uploaded to AIAA")
-        /* this.$router.push("/new"); */
+        alert("Upload successful ...");
+        /*this.$router.push("/new"); */
       } catch (e) {
         console.log(e);
       }
