@@ -7,28 +7,18 @@
           EBM Model Uploader
         </div>
       </v-row>
-      <hr>
-      <v-row>
-        <v-col cols="12" md="6" class="pl-sm-6">
-          <div align="left" justify="center" >           
-            <img src="@/assets/model.png" width=100% alt="EBM Model Uploader">
-          </div>
-        </v-col>
 
-        <v-form v-on:submit.prevent="submit">
-          <v-col cols="12" md="6" class="pl-sm-6">
+      <v-form v-on:submit.prevent="submit">
+          <!--<v-col cols="12" md="6" class="pl-sm-6">-->
             <br><br>
+            <v-text-field v-model="model_data.name" label="name your model"></v-text-field>
             <v-file-input v-model="model_data.data" accept="zip" label="upload your custom model" ></v-file-input>
             <v-file-input v-model="model_data.config" accept="application/json" label="upload config file" ></v-file-input>
             <v-btn class="blue rounded-pill" @click="submit">upload</v-btn>   
-          </v-col>
-        </v-form>
-      </v-row>
-      
-      
+          <!--</v-col>-->
+      </v-form>     
     </v-container>
     
-
   </v-app>
 </template>
 
@@ -43,7 +33,8 @@ import axios from 'axios';
       return {
         model_data: {
           data: "",
-          config: ""
+          config: "",
+          name: ""
 
         }
       }   
@@ -59,7 +50,7 @@ import axios from 'axios';
         formData.append(data, this.model_data[data]);
       }
       try {
-        await axios.put("http://localhost:5000/admin/model/ebmodel2", formData, config);
+        await axios.put("http://localhost:5000/admin/model/ + data.name", formData, config);
         console.log("model uploaded to AIAA")
         /* this.$router.push("/new"); */
       } catch (e) {
@@ -70,6 +61,12 @@ import axios from 'axios';
     },
     
   };
+
+
+
+
+
+
   //class="mx-12 my-8"
   /*
   methods: {
@@ -131,6 +128,12 @@ import axios from 'axios';
               
           </v-form>
           -->
-          
+
+    <!--<v-row>-->
+        <!--<v-col cols="12" md="6" class="pl-sm-6">
+          <div align="left" justify="center" >           
+            <img src="@/assets/model.png" width=100% alt="EBM Model Uploader">
+          </div>
+        </v-col>--> 
   */
 </script>
