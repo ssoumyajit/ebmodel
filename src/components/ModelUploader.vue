@@ -1,22 +1,38 @@
 <template>
   <v-app>
-    <br><br><br><br><br><br><br>
+    <br><br><br><br>
     <v-container class="ma-24">
       <v-row align="center" justify="center" >
         <div  class="mb-5 font-weight-bold">
           EBM Model Uploader
         </div>
       </v-row>
-
+       
       <v-form v-on:submit.prevent="submit">
           <!--<v-col cols="12" md="6" class="pl-sm-6">-->
             <br><br>
             <v-text-field v-model="model_data.name" label="name your model"></v-text-field>
-            <v-file-input v-model="model_data.data" accept="zip" label="upload your custom model" ></v-file-input>
+            <v-file-input v-model="model_data.data" accept="zip, .zip, trt.pb, .trt.pb" label="upload your custom model" ></v-file-input>
             <v-file-input v-model="model_data.config" accept="application/json" label="upload config file" ></v-file-input>
             <v-btn class="blue rounded-pill" @click="submit">upload</v-btn>   
           <!--</v-col>-->
-      </v-form>     
+      </v-form>
+      <br><br>
+      <v-alert
+          v-if="response"
+          outlined
+          :type="alertType"
+          text
+        >
+          Upload successful ...
+      </v-alert>
+
+      <v-overlay v-model="overlay">
+        <v-progress-circular
+          indeterminate
+          color="primary">
+        </v-progress-circular>
+      </v-overlay>
     </v-container>
     
   </v-app>
@@ -31,8 +47,11 @@ import axios from 'axios';
     
     data() {
       return {
-        name: "",
+        overlay:false,
+        response:false,
+        alertType:'success',
         model_data: {
+          name:"",
           data: "",
           config: ""
         }
@@ -41,6 +60,7 @@ import axios from 'axios';
     methods: {
 
       async submit() {
+        let vm = this
       const config = {
         headers: { "content-type": "multipart/form-data" }
       };
@@ -49,11 +69,26 @@ import axios from 'axios';
         formData.append(data, this.model_data[data]);
       }
       try {
+        this.overlay =  true
         await axios.put('http://localhost:5000/admin/model/'+ encodeURIComponent(this.model_data.name), formData, config);
         console.log("model uploaded to AIAA")
-        alert("Upload successful ...");
+        this.overlay = false
+        this.alertType = 'success'
+        this.response = true
+        this.model_data.name =""
+        this.model_data.data = ""
+        this.model_data.config =""
+        setTimeout(() =>{
+          vm.response = false
+        },3000)
         /*this.$router.push("/new"); */
       } catch (e) {
+        this.overlay = false
+        this.alertType = 'error'
+        this.response = true
+        setTimeout(() =>{
+          vm.response = false
+        },3000)
         console.log(e);
       }
       
